@@ -9,9 +9,3 @@ variable "dev_bucket_name" {
     type        = string
     default     = "dev-lp-thesis-bucket-25913513"
 }
-
-variable "prod_bucket_name" {
-    description = "The name of the S3 bucket [PRODUCTION]."
-    type        = string
-    default     = "prod-lp-thesis-bucket-25913513"
-}

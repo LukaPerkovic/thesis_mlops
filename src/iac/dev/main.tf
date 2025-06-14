@@ -10,12 +10,3 @@ resource "aws_s3_bucket" "dev_bucket" {
         Environment = "Development"
     }
 }
-
-resource "aws_s3_bucket" "prod_bucket" {
-    bucket = var.prod_bucket_name
-
-    tags = {
-        Name        = "Prod Data Bucket"
-        Environment = "Production"
-    }
-}

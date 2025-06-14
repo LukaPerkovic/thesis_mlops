@@ -192,3 +192,8 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+
+# Terraform registry
+src/iac/.terraform.lock.hcl
+src/iac/.terraform/
