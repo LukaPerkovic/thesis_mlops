@@ -1,3 +1,9 @@
+from typing import Protocol
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score
+import optuna
+
 class Model(Protocol):
   def fit(self, X, y):
     ...
@@ -41,6 +47,7 @@ class ModelOptimization(ModelEvaluation):
     self.X: pd.DataFrame = X
     self.y: pd.Series = y
     self.model: Model = model
+    self.score: tuple = ("f1_score", 0.0)
     self.threshold: float = threshold
     self.production_ready: bool = False
 
@@ -79,9 +86,16 @@ class ModelOptimization(ModelEvaluation):
       final_model = self.model(**best_params)
       final_model.fit(self.X, self.y)
       self.production_ready = True
+      self.score = ("f1_score", study.best_value)
     else:
       self.production_ready = False
       final_model = None
 
 
     return final_model
+  
+  def get_score(self) -> tuple:
+    """
+    Returns the final score of the model if it satisfies the criteria.
+    """
+    return self.score
