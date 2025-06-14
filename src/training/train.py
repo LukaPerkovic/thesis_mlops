@@ -11,25 +11,40 @@ from src.models.train_model import train
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Train and register a model.")
-    parser.add_argument("--data_path", type=str, required=True, help="Path to the training data.")
-    parser.add_argument("--model_name", type=str, required=True, help="Name of the model to be registered.")
-    parser.add_argument("--performance_threshold", type=float, default=0.8, help="Performance threshold for production readiness.")
-    
-    return parser.parse_args()
-    
-def main():
+    parser.add_argument(
+        "--data_path", type=str, required=True, help="Path to the training data."
+    )
+    parser.add_argument(
+        "--model_name",
+        type=str,
+        required=True,
+        help="Name of the model to be registered.",
+    )
+    parser.add_argument(
+        "--performance_threshold",
+        type=float,
+        default=0.8,
+        help="Performance threshold for production readiness.",
+    )
 
+    return parser.parse_args()
+
+
+def main():
     args = parse_args()
-    
+
     logging.info("Starting model training and registration.")
 
     logging.info(f"Loading data from {args.data_path}")
-    X, y =  preprocess(load_data(args.data_path), target_column=TARGET)
+    X, y = preprocess(load_data(args.data_path), target_column=TARGET)
 
     logging.info("Commencing model training.")
-    trained_model, score = train(X, y, model=xgb.XGBClassifier, performance_threshold=args.performance_threshold)
+    trained_model, score = train(
+        X, y, model=xgb.XGBClassifier, performance_threshold=args.performance_threshold
+    )
 
     if trained_model:
         logging.info("Model training completed and satisfies criteria.")
@@ -38,6 +53,7 @@ def main():
         logging.info(f"Model {args.model_name} registered successfully.")
     else:
         logging.warning("Model not ready for production.")
+
 
 if __name__ == "__main__":
     main()

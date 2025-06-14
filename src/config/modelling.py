@@ -1,2 +1,2 @@
-TARGET = 'Class'
+TARGET = "Class"
 PERFORMANCE_THRESHOLD = 0.8
