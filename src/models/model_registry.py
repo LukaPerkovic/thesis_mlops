@@ -1,8 +1,10 @@
-import mlflow
 import os
+
+import mlflow
 from dotenv import load_dotenv
 from mlflow import MlflowClient
 from pandas import DataFrame
+
 from src.models.model_definitions import Model
 
 

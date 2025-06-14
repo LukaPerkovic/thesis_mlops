@@ -1,10 +1,11 @@
 import argparse
 import logging
+
 import xgboost as xgb
 
 from src.config.modelling import TARGET
-from src.data.preprocessing import preprocess
 from src.data.extraction import load_data
+from src.data.preprocessing import preprocess
 from src.models.model_registry import DatabricksModelRegistry
 from src.models.train_model import train
 

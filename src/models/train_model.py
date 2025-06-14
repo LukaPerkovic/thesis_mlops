@@ -1,8 +1,8 @@
+from typing import Tuple, Union
+
 import pandas as pd
-from typing import Tuple
-from typing import Union
-from src.models.model_definitions import Model
-from src.models.model_definitions import ModelOptimization
+
+from src.models.model_definitions import Model, ModelOptimization
 
 
 def train(
