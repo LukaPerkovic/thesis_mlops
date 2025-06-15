@@ -10,11 +10,10 @@ load_dotenv()
 
 
 def load_data(file_path: str) -> pd.DataFrame:
-    match file_path:
-        case file_path.startswith("s3://"):
-            df = load_data_from_s3(parse_s3_path(*file_path))
-        case _:
-            df = pd.read_csv(file_path)
+    if file_path.startswith("s3://"):
+        df = load_data_from_s3(parse_s3_path(*file_path))
+    else:
+        df = pd.read_csv(file_path)
 
     return df
 
