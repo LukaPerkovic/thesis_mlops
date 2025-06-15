@@ -195,5 +195,7 @@ cython_debug/
 
 
 # Terraform registry
-src/iac/.terraform.lock.hcl
-src/iac/.terraform/
+.terraform.lock.hcl
+.terraform/
+terraform.tfstate*
+tf_plan*
