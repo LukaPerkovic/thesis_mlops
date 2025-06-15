@@ -1,10 +1,33 @@
+import json
+import os
+
 import pandas as pd
+import requests
 
-from src.models.model_definitions import Model
+
+def create_tf_serving_json(data):
+    return {
+        "inputs": {name: data[name].tolist() for name in data.keys()}
+        if isinstance(data, dict)
+        else data.tolist()
+    }
 
 
-def infer(model: Model, data: pd.DataFrame) -> pd.DataFrame:
-    data = data.set_index("id")
-    predictions = model.predict(data)
-
-    return pd.DataFrame(predictions, index=data.index, columns=["predictions"])
+def score_model(dataset):
+    url = "https://dbc-99134396-0c42.cloud.databricks.com/serving-endpoints/test_endpoint_lp_1/invocations"
+    headers = {
+        "Authorization": f"Bearer {os.environ.get('DATABRICKS_TOKEN')}",
+        "Content-Type": "application/json",
+    }
+    ds_dict = (
+        {"dataframe_split": dataset.to_dict(orient="split")}
+        if isinstance(dataset, pd.DataFrame)
+        else create_tf_serving_json(dataset)
+    )
+    data_json = json.dumps(ds_dict, allow_nan=True)
+    response = requests.request(method="POST", headers=headers, url=url, data=data_json)
+    if response.status_code != 200:
+        raise Exception(
+            f"Request failed with status {response.status_code}, {response.text}"
+        )
+    return response.json()
