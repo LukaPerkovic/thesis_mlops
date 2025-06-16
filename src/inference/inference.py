@@ -36,7 +36,7 @@ def create_serving_json(data: Union[Dict[str, Any], pd.DataFrame]) -> Dict[str, 
     return {
         "inputs": {name: data[name].tolist() for name in data.keys()}
         if isinstance(data, dict)
-        else data.tolist()
+        else data.to_list()
     }
 
 
