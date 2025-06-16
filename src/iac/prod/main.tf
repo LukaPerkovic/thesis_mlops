@@ -4,7 +4,8 @@ provider "aws" {
 
 resource "aws_s3_bucket" "prod_bucket" {
     bucket = var.bucket_name
-
+    force_destroy = true
+    
     tags = {
         Name        = "Prod Data Bucket"
         Environment = "Production"
@@ -28,9 +29,15 @@ resource "aws_s3_object" "training_data" {
 }
 
 
-resource "aws_s3_object" "inference_data" {
+resource "aws_s3_object" "inference_input_data" {
     bucket = aws_s3_bucket.prod_bucket.bucket
-    key = "inference_data/*"
+    key = "inference_data/input_data/*"
+    source = "/dev/null"
+}
+
+resource "aws_s3_object" "inference_output_data" {
+    bucket = aws_s3_bucket.prod_bucket.bucket
+    key = "inference_data/output_data/*"
     source = "/dev/null"
 }
 
