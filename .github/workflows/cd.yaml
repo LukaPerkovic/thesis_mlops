@@ -1,0 +1,66 @@
+ame: Train and Deploy Pipeline
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 0 * * *'
+
+jobs:
+  run_scripts:
+    name: Execute Training and Deployment Scripts
+    runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: dev
+
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up dependency manager
+        uses: astral-sh/setup-uv@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+
+      - name: Install Dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run Training Script
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          DBX_USER: ${{ secrets.DBX_USER }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
+        if: env.ENVIRONMENT == 'dev'
+        run: |
+          uv run -m src.training.train \
+           --data_path s3://dev-lp-thesis-bucket-25913513/training_data \
+           --model_name fraud_detection \
+           --performance_threshold 0.7
+
+        if: env.ENVIRONMENT == 'prod'
+        run: |
+          uv run -m src.training.train \
+           --data_path s3://prod-lp-thesis-bucket-25913513/training_data \
+           --model_name fraud_detection \
+           --performance_threshold 0.85
+
+      - name: Run Deployment Script
+        env:
+          DBX_USER: ${{ secrets.DBX_USER }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
+        run: |
+          uv run -m src.deployment.deploy \
+            --endpoint_name "${env.ENVIRONMENT}_${secrets.ENDPOINT_NAME}" \
+            --model_name fraud_detection
+
+
