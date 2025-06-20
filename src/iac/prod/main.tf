@@ -54,13 +54,6 @@ resource "aws_iam_role" "prod_github_actions_role" {
                 Principal = {
                     AWS: "arn:aws:iam::${var.account_id}:user/github_actions_robot"
                 }
-            },
-            {
-                Action = "sts:TagSession"
-                Effect = "Allow"
-                Principal = {
-                    AWS: "arn:aws:iam::${var.account_id}:user/github_actions_robot"
-                }
             }
         ]
     })
@@ -68,6 +61,24 @@ resource "aws_iam_role" "prod_github_actions_role" {
     tags = {
         Environment = "Production"
     }
+}
+
+resource "aws_iam_policy" "github_actions_robot_policy" {
+    name = "github_actions_robot_policy"
+    description = "Policy for GitHub Actions Robot to access production resources"
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [
+            {
+                Effect = "Allow"
+                Action = [
+                    "sts:AssumeRole",
+                    "sts:TagSession",
+                ],
+                Resource = "arn.aws:iam::${var.account_id}:role/${aws_iam_role.prod_github_actions_role.name}"
+            }
+        ]
+    })
 }
 
 resource "aws_iam_policy" "prod_github_actions_policy" {
