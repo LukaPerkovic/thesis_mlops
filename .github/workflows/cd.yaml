@@ -29,7 +29,7 @@ jobs:
       - name: Install Dependencies
         run: uv sync --locked --all-extras --dev
 
-      - name: Run Training Script
+      - name: Run Training Script DEV
         env:
           AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -44,6 +44,15 @@ jobs:
            --data_path s3://dev-lp-thesis-bucket-25913513/training_data \
            --model_name fraud_detection \
            --performance_threshold 0.7
+
+      - name: Run Training Script PROD
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          DBX_USER: ${{ secrets.DBX_USER }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
         if: env.ENVIRONMENT == 'prod'
         run: |
