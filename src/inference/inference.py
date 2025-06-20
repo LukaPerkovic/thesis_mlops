@@ -29,6 +29,10 @@ def parse_args():
         help="Path to export inference data.",
     )
 
+    parser.add_argument(
+        "--endpoint_name", type=str, required=True, help="The name of the endpoint."
+    )
+
     return parser.parse_args()
 
 

@@ -1,4 +1,4 @@
-ame: Train and Deploy Pipeline
+name: Train and Deploy Pipeline
 
 on:
   workflow_dispatch:
@@ -60,7 +60,7 @@ jobs:
           ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
         run: |
           uv run -m src.deployment.deploy \
-            --endpoint_name "${env.ENVIRONMENT}_${secrets.ENDPOINT_NAME}" \
+            --endpoint_name "${env.ENVIRONMENT}-${secrets.ENDPOINT_NAME}" \
             --model_name fraud_detection
 
 

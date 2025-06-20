@@ -1,0 +1,44 @@
+name: Inference Pipeline
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 0 * * *'
+
+jobs:
+  run_scripts:
+    name: Execute Inference Script
+    runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: dev
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up dependency manager
+        uses: astral-sh/setup-uv@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+
+      - name: Install Dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Run Training Script
+        env:
+          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
+
+        run: |
+          FULL_ENDPOINT_NAME="${DATABRICKS_HOST}/serving-endpoints/${env.ENVIRONMENT}-${secrets.ENDPOINT_NAME}/invocations"
+          uv run -m src.inference.inference \
+            --input_data_path s3://dev-lp-thesis-bucket-25913513/inference_data/input_data \
+            --output_data_path s3://dev-lp-thesis-bucket-25913513/inference_data/output_data/results.csv \
+            --endpoint_name ${FULL_ENDPOINT_NAME}
