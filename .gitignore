@@ -192,3 +192,14 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+
+# Terraform registry
+.terraform.lock.hcl
+.terraform/
+terraform.tfstate*
+tf_plan*
+
+
+# IDE
+.vscode
