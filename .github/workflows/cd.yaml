@@ -65,13 +65,14 @@ jobs:
 
       - name: Run Deployment Script
         env:
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
           DBX_USER: ${{ secrets.DBX_USER }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
         run: |
           uv run -m src.deployment.deploy \
-            --endpoint_name "${env.ENVIRONMENT}-${ENDPOINT_NAME}" \
+            --endpoint_name "${ENVIRONMENT}-${ENDPOINT_NAME}" \
             --model_name fraud_detection
 
 
