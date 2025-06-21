@@ -43,9 +43,6 @@ jobs:
           DBX_USER: ${{ secrets.DBX_USER }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-
-        run: |
-
         if: env.ENVIRONMENT == 'dev'
         run: |
           uv run -m src.training.train \
