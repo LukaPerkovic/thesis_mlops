@@ -49,7 +49,10 @@ resource "aws_iam_role" "dev_github_actions_role" {
         Version = "2012-10-17"
         Statement = [
             {
-                Action = "sts:AssumeRole"
+                Action = [
+                    "sts:AssumeRole",
+                    "sts:TagSession",
+                ],
                 Effect = "Allow"
                 Principal = {
                     AWS: "arn:aws:iam::${var.account_id}:user/github_actions_robot"
