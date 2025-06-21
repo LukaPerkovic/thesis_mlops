@@ -53,7 +53,6 @@ def prepare_dataset(dataset: Union[pd.DataFrame, Dict[str, Any]]) -> Dict[str, A
 
 
 def send_request(url: str, data_json: str) -> Dict[str, Any]:
-    url = os.getenv("ENDPOINT_URL")
     headers = {
         "Authorization": f"Bearer {os.getenv('DATABRICKS_TOKEN')}",
         "Content-Type": "application/json",
