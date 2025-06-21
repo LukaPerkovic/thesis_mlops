@@ -28,16 +28,23 @@ jobs:
       - name: Install Dependencies
         run: uv sync --locked --all-extras --dev
 
+      - name: Configue AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-session-name: github-actions-session
+
       - name: Run Training Script
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
 
         run: |
-          FULL_ENDPOINT_NAME="${DATABRICKS_HOST}/serving-endpoints/${env.ENVIRONMENT}-${secrets.ENDPOINT_NAME}/invocations"
+          FULL_ENDPOINT_NAME="${DATABRICKS_HOST}/serving-endpoints/${ENVIRONMENT}-${ENDPOINT_NAME}/invocations"
           uv run -m src.inference.inference \
             --input_data_path s3://dev-lp-thesis-bucket-25913513/inference_data/input_data \
             --output_data_path s3://dev-lp-thesis-bucket-25913513/inference_data/output_data/results.csv \
