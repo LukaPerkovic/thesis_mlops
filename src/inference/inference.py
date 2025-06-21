@@ -92,7 +92,7 @@ def main():
     predictions = pd.DataFrame(score_model(data)["predictions"])
     predictions_df = pd.concat([data["id"], predictions], axis=1)
     logger.info("Results generated successfully.")
-
+    print("URL CHECK->>", os.getenv("ENDPOINT_URL"))
     save_data(predictions_df, args.output_data_path)
     logger.info("Results exported!")
 
