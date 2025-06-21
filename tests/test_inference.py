@@ -39,7 +39,8 @@ def test_send_request_success(mock_getenv, mock_post):
 
     from src.inference.inference import send_request
 
-    result = send_request('{"foo": "bar"}')
+    url = "https://test_url"
+    result = send_request(url, '{"foo": "bar"}')
     assert result == {"predictions": [1, 0]}
 
 
@@ -63,7 +64,8 @@ def test_send_request_failure(mock_getenv, mock_post):
 def test_score_model_success(mock_send_request):
     mock_send_request.return_value = {"predictions": [1, 0]}
     df = pd.DataFrame({"a": [1, 2]})
-    result = score_model(df)
+    url = "http://test-url"
+    result = score_model(url, df)
     assert result == {"predictions": [1, 0]}
 
 
