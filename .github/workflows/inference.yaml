@@ -42,7 +42,7 @@ jobs:
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
-          ENDPOINT_URL: "${DATABRICKS_HOST}/serving-endpoints/${ENVIRONMENT}-${ENDPOINT_NAME}/invocations"
+          ENDPOINT_URL: "https://${DATABRICKS_HOST}/serving-endpoints/${ENVIRONMENT}-${ENDPOINT_NAME}/invocations"
 
         run: |
           uv run -m src.inference.inference \
