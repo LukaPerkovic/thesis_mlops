@@ -37,10 +37,6 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: github-actions-session
-      
-      - name: Debug Credentials
-        run: |
-          echo "::add-mask::$DATABRICKS_HOST"
 
       - name: Run Training Script DEV
         env:
@@ -54,6 +50,8 @@ jobs:
           else
             echo "DATABRICKS TOKEN is set"
           fi
+
+          echo "::add-mask::$DATABRICKS_HOST"
 
         # if: env.ENVIRONMENT == 'dev'
       #   run: |
