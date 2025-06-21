@@ -49,8 +49,12 @@ jobs:
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
         run: |
-          echo "::add-mask::$DATABRICKS_HOST"
-          
+          if [ -z "$DATABRICKS_TOKEN"]; then
+            echo "DATABRICKS_TOKEN is not set.
+          else
+            echo "DATABRICKS TOKEN is set"
+          fi
+
         # if: env.ENVIRONMENT == 'dev'
       #   run: |
       #     uv run -m src.training.train \
