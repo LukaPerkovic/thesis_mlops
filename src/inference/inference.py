@@ -89,7 +89,7 @@ def score_model(
 def main():
     args = parse_args()
     data = load_data(args.input_data_path)
-    print("URL CHECK->>", os.getenv("ENDPOINT_URL"))
+    print("URL CHECK->>", args.endpoint_name)
 
     predictions = pd.DataFrame(score_model(args.endpoint_name, data)["predictions"])
     predictions_df = pd.concat([data["id"], predictions], axis=1)

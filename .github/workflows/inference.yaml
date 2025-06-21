@@ -41,6 +41,7 @@ jobs:
         env:
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
           ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
 
         run: |
