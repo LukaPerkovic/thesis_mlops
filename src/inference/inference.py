@@ -52,7 +52,7 @@ def prepare_dataset(dataset: Union[pd.DataFrame, Dict[str, Any]]) -> Dict[str, A
     }
 
 
-def send_request(data_json: str) -> Dict[str, Any]:
+def send_request(url: str, data_json: str) -> Dict[str, Any]:
     url = os.getenv("ENDPOINT_URL")
     headers = {
         "Authorization": f"Bearer {os.getenv('DATABRICKS_TOKEN')}",
@@ -69,11 +69,13 @@ def send_request(data_json: str) -> Dict[str, Any]:
     return response.json()
 
 
-def score_model(dataset: Union[pd.DataFrame, Dict[str, Any]]) -> Dict[str, Any]:
+def score_model(
+    url: str, dataset: Union[pd.DataFrame, Dict[str, Any]]
+) -> Dict[str, Any]:
     try:
         ds_dict = prepare_dataset(dataset)
         data_json = json.dumps(ds_dict, allow_nan=True)
-        return send_request(data_json)
+        return send_request(url, data_json)
     except requests.RequestException as e:
         logger.error(f"Error during model scoring: {e}")
         raise
@@ -90,7 +92,7 @@ def main():
     data = load_data(args.input_data_path)
     print("URL CHECK->>", os.getenv("ENDPOINT_URL"))
 
-    predictions = pd.DataFrame(score_model(data)["predictions"])
+    predictions = pd.DataFrame(score_model(args.endpoint_name, data)["predictions"])
     predictions_df = pd.concat([data["id"], predictions], axis=1)
     logger.info("Results generated successfully.")
     save_data(predictions_df, args.output_data_path)
