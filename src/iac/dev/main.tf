@@ -75,7 +75,7 @@ resource "aws_iam_policy" "github_actions_robot_policy" {
                     "sts:AssumeRole",
                     "sts:TagSession",
                 ],
-                Resource = "arn.aws:iam::${var.account_id}:role/${aws_iam_role.dev_github_actions_role.name}"
+                Resource = "arn:aws:iam::${var.account_id}:role/${aws_iam_role.dev_github_actions_role.name}"
             }
         ]
     })
@@ -83,7 +83,7 @@ resource "aws_iam_policy" "github_actions_robot_policy" {
 
 resource "aws_iam_policy" "dev_github_actions_policy" {
     name = "dev_policy"
-    description = "Policy for development environment Lambda functions"
+    description = "Policy for development S3"
     policy = jsonencode({
         Version = "2012-10-17"
         Statement = [
@@ -105,8 +105,8 @@ resource "aws_iam_policy" "dev_github_actions_policy" {
     })
 }
 
-resource "aws_iam_role_policy_attachment" "dev_github_actions_robot_policy_attach" {
-    role       = aws_iam_role.dev_github_actions_role.name
+resource "aws_iam_user_policy_attachment" "dev_github_actions_robot_policy_attach" {
+    user       = "github_actions_robot"
     policy_arn = aws_iam_policy.github_actions_robot_policy.arn
 }
 
