@@ -37,6 +37,14 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: github-actions-session
+      
+      - name: Debug Credentials
+        run: |
+          if [ -z "$AWS_SESSION_TOKEN" ]; then
+            echo "AWS_SESSION_TOKEN is not set"
+          else
+            echo "AWS_SESSION_TOKEN is set"
+          fi
 
       - name: Run Training Script DEV
         env:
