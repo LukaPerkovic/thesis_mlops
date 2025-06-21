@@ -37,7 +37,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           role-session-name: github-actions-session
 
-      - name: Run Training Script
+      - name: Run Inference Script
         env:
           ENVIRONMENT: ${{ env.ENVIRONMENT }}
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}

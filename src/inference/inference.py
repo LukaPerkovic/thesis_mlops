@@ -88,11 +88,11 @@ def score_model(dataset: Union[pd.DataFrame, Dict[str, Any]]) -> Dict[str, Any]:
 def main():
     args = parse_args()
     data = load_data(args.input_data_path)
+    print("URL CHECK->>", os.getenv("ENDPOINT_URL"))
 
     predictions = pd.DataFrame(score_model(data)["predictions"])
     predictions_df = pd.concat([data["id"], predictions], axis=1)
     logger.info("Results generated successfully.")
-    print("URL CHECK->>", os.getenv("ENDPOINT_URL"))
     save_data(predictions_df, args.output_data_path)
     logger.info("Results exported!")
 
