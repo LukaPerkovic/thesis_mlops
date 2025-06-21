@@ -12,6 +12,7 @@ from src.models.model_definitions import Model
 class DatabricksModelRegistry:
     def __init__(self):
         load_dotenv()
+        print("DEBUGGING DATABRICKS_HOST:", os.getenv("DATABRICKS_HOST")[:5])
         mlflow.set_tracking_uri("databricks")
         mlflow.set_registry_uri("databricks-uc")
         self.client = MlflowClient()
