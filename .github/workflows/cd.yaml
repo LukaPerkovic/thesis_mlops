@@ -40,11 +40,7 @@ jobs:
       
       - name: Debug Credentials
         run: |
-          if [ -z "$AWS_SESSION_TOKEN" ]; then
-            echo "AWS_SESSION_TOKEN is not set"
-          else
-            echo "AWS_SESSION_TOKEN is set"
-          fi
+          echo "::add-mask::$DATABRICKS_HOST"
 
       - name: Run Training Script DEV
         env:
