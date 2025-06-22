@@ -47,6 +47,6 @@ jobs:
         run: |
           FULL_ENDPOINT_NAME="${DATABRICKS_HOST}/serving-endpoints/${ENVIRONMENT}-${ENDPOINT_NAME}/invocations"
           uv run -m src.inference.inference \
-            --input_data_path s3://dev-lp-thesis-bucket-25913513/inference_data/input_data \
-            --output_data_path s3://dev-lp-thesis-bucket-25913513/inference_data/output_data/results.csv \
+            --input_data_path s3://prod-lp-thesis-bucket-25913513/inference_data/input_data \
+            --output_data_path s3://prod-lp-thesis-bucket-25913513/inference_data/output_data/results.csv \
             --endpoint_name ${FULL_ENDPOINT_NAME}
