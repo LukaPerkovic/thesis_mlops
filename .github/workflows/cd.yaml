@@ -3,7 +3,7 @@ name: Train and Deploy Pipeline
 on:
   workflow_dispatch:
   # schedule:
-  #   - cron: '0 0 * * *'
+  #   - cron: '0 0 * * *' If you want to schedule the workflow
 
 jobs:
   run_scripts:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ENVIRONMENT: dev
+      ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }} # Default to 'dev' if not specified
 
 
     steps:
