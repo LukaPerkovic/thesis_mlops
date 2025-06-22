@@ -35,7 +35,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          role-to-assume: GithubActionsRoleProd
+          role-to-assume: GitHubActionsRoleProd
           role-session-name: github-actions-session
 
       - name: Run Training Script PROD

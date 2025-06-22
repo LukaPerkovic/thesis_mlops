@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }} # Default to 'dev' if not specified
+      ENVIRONMENT: dev
 
 
     steps:
@@ -35,7 +35,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          role-to-assume: GithubActionsRoleDev
+          role-to-assume: GitHubActionsRoleDev
           role-session-name: github-actions-session
 
       - name: Run Training Script DEV
