@@ -1,4 +1,4 @@
-name: Train and Deploy Pipeline
+name: Train and Deploy Pipeline PROD
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ENVIRONMENT: prod  # Default to 'dev' if not specified
+      ENVIRONMENT: prod
 
 
     steps:
@@ -35,20 +35,8 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: GithubActionsRoleProd
           role-session-name: github-actions-session
-
-      - name: Run Training Script DEV
-        env:
-          DBX_USER: ${{ secrets.DBX_USER }}
-          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-        if: env.ENVIRONMENT == 'dev'
-        run: |
-          uv run -m src.training.train \
-           --data_path s3://dev-lp-thesis-bucket-25913513/training_data \
-           --model_name fraud_detection \
-           --performance_threshold 0.7
 
       - name: Run Training Script PROD
         env:
@@ -56,7 +44,6 @@ jobs:
           DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
           DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
-        if: env.ENVIRONMENT == 'prod'
         run: |
           uv run -m src.training.train \
            --data_path s3://prod-lp-thesis-bucket-25913513/training_data \

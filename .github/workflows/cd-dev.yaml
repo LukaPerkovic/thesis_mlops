@@ -1,0 +1,64 @@
+name: Train and Deploy Pipeline DEV
+
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '0 0 * * *' If you want to schedule the workflow
+
+jobs:
+  run_scripts:
+    name: Execute Training and Deployment Scripts
+    runs-on: ubuntu-latest
+
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }} # Default to 'dev' if not specified
+
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up dependency manager
+        uses: astral-sh/setup-uv@v5
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: .python-version
+
+      - name: Install Dependencies
+        run: uv sync --locked --all-extras --dev
+
+      - name: Configue AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: GithubActionsRoleDev
+          role-session-name: github-actions-session
+
+      - name: Run Training Script DEV
+        env:
+          DBX_USER: ${{ secrets.DBX_USER }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          uv run -m src.training.train \
+           --data_path s3://dev-lp-thesis-bucket-25913513/training_data \
+           --model_name fraud_detection \
+           --performance_threshold 0.7
+
+      - name: Run Deployment Script
+        env:
+          ENVIRONMENT: ${{ env.ENVIRONMENT }}
+          DBX_USER: ${{ secrets.DBX_USER }}
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+          ENDPOINT_NAME: ${{ secrets.ENDPOINT_NAME }}
+        run: |
+          uv run -m src.deployment.deploy \
+            --endpoint_name "${ENVIRONMENT}-${ENDPOINT_NAME}" \
+            --model_name fraud_detection
+
+
